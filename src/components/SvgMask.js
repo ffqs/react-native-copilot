@@ -1,10 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import {
-  View,
   Animated,
   Easing,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import Svg from 'react-native-svg';
 import AnimatedSvgPath from './AnimatedPath';
@@ -22,7 +22,8 @@ type Props = {
   animationDuration: number,
   animated: boolean,
   backdropColor: string,
-  svgMaskPath?: svgMaskPath
+  svgMaskPath?: svgMaskPath,
+  onPress: any,
 };
 
 type State = {
@@ -100,8 +101,20 @@ class SvgMask extends Component<Props, State> {
   }
 
   render() {
+    const { onPress } = this.props
     return (
-      <View pointerEvents="box-none" style={this.props.style} onLayout={this.handleLayout}>
+      <TouchableOpacity
+        // pointerEvents="box-none"
+        activeOpacity={1}
+        style={this.props.style}
+        onLayout={this.handleLayout}
+        onPress={(e) => {
+          console.log(e.target, e.currentTarget, onPress)
+          if (onPress) {
+            onPress()
+          }
+        }}
+      >
         {
           this.state.canvasSize
             ? (
@@ -121,7 +134,7 @@ class SvgMask extends Component<Props, State> {
             )
             : null
         }
-      </View>
+      </TouchableOpacity>
     );
   }
 }

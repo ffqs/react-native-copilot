@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Animated, Easing, View, NativeModules, Modal, StatusBar, Platform } from 'react-native';
+import { Animated, Easing, View, NativeModules, StatusBar, Platform } from 'react-native';
 import Tooltip from './Tooltip';
 import StepNumber from './StepNumber';
 import styles, { MARGIN, ARROW_SIZE, STEP_NUMBER_DIAMETER, STEP_NUMBER_RADIUS } from './style';
@@ -26,6 +26,7 @@ type Props = {
   backdropColor: string,
   labels: Object,
   svgMaskPath?: SvgMaskPathFn,
+  onPress: any,
 };
 
 type State = {
@@ -226,6 +227,7 @@ class CopilotModal extends Component<Props, State> {
   }
 
   renderMask() {
+    const { onPress } = this.props
     /* eslint-disable global-require */
     const MaskComponent = this.props.overlay === 'svg'
       ? require('./SvgMask').default
@@ -242,6 +244,7 @@ class CopilotModal extends Component<Props, State> {
         animationDuration={this.props.animationDuration}
         backdropColor={this.props.backdropColor}
         svgMaskPath={this.props.svgMaskPath}
+        onPress={onPress}
       />
     );
   }
@@ -289,13 +292,17 @@ class CopilotModal extends Component<Props, State> {
     const containerVisible = this.state.containerVisible || this.props.visible;
     const contentVisible = this.state.layout && containerVisible;
 
+    if (!containerVisible) return null
+
     return (
-      <Modal
-        animationType="none"
-        visible={containerVisible}
-        onRequestClose={noop}
-        transparent
-        supportedOrientations={['portrait', 'landscape']}
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
       >
         <View
           style={styles.container}
@@ -304,7 +311,7 @@ class CopilotModal extends Component<Props, State> {
           {contentVisible && this.renderMask()}
           {contentVisible && this.renderTooltip()}
         </View>
-      </Modal>
+      </View>
     );
   }
 }

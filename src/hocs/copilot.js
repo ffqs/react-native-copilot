@@ -172,11 +172,13 @@ const copilot = ({
       }
 
       render() {
+        const onPress = this.state.currentStep ? this.state.currentStep.target.props.onPress : null
         return (
           <View style={wrapperStyle || { flex: 1 }}>
             <WrappedComponent
               {...this.props}
               start={this.start}
+              stop={this.stop}
               currentStep={this.state.currentStep}
               visible={this.state.visible}
               copilotEvents={this.eventEmitter}
@@ -190,6 +192,7 @@ const copilot = ({
               isLastStep={this.isLastStep()}
               currentStepNumber={this.getStepNumber()}
               currentStep={this.state.currentStep}
+              onPress={onPress}
               labels={labels}
               stepNumberComponent={stepNumberComponent}
               tooltipComponent={tooltipComponent}
